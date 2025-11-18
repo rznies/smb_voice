@@ -3,10 +3,13 @@
  * Handles all database operations for the SMB Voice AI platform
  */
 
-import { createClient, SupabaseClient } from '@supabase/supabase-js';
+import { createClient } from '@supabase/supabase-js';
+import type { SupabaseClient as SupabaseClientType } from '@supabase/supabase-js';
 import dotenv from 'dotenv';
 
 dotenv.config({ path: '.env.local' });
+
+type SupabaseClient = SupabaseClientType<any, 'public', any>;
 
 // Database types
 export interface User {
