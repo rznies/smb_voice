@@ -14,8 +14,11 @@
     "test": "node --test --import tsx",
     "test:watch": "node --test --watch --import tsx",
     "dev": "tsx src/agent.ts dev",
+    "dev:api": "tsx src/api/server.ts",
+    "dev:all": "concurrently \"pnpm dev\" \"pnpm dev:api\"",
     "download-files": "pnpm run build && node dist/agent.js download-files",
-    "start": "node dist/agent.js start"
+    "start": "node dist/agent.js start",
+    "start:api": "node dist/api/server.js"
   },
   "engines": {
     "node": ">=22.0.0",
@@ -24,7 +27,10 @@
   "devDependencies": {
     "@eslint/js": "^9.38.0",
     "@trivago/prettier-plugin-sort-imports": "^5.2.2",
+    "@types/express": "^5.0.0",
+    "@types/jsonwebtoken": "^9.0.7",
     "@types/node": "^22.18.11",
+    "concurrently": "^9.1.2",
     "eslint": "^9.38.0",
     "globals": "^16.4.0",
     "jiti": "^2.6.1",
@@ -37,7 +43,18 @@
     "@livekit/agents-plugin-livekit": "^1.0.11",
     "@livekit/agents-plugin-silero": "^1.0.11",
     "@livekit/noise-cancellation-node": "^0.1.9",
+    "@deepgram/sdk": "^3.12.0",
+    "@google/generative-ai": "^0.21.0",
+    "@supabase/supabase-js": "^2.48.1",
     "dotenv": "^17.2.3",
+    "elevenlabs": "^0.21.0",
+    "express": "^4.21.2",
+    "googleapis": "^144.0.0",
+    "ioredis": "^5.4.1",
+    "jsonwebtoken": "^9.0.2",
+    "livekit-server-sdk": "^2.9.1",
+    "twilio": "^5.4.0",
+    "winston": "^3.18.0",
     "zod": "^3.25.76"
   }
 }

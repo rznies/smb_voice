@@ -1,0 +1,54 @@
+# Fly.io deployment configuration for SMB Voice AI Agent
+# Deploy with: fly deploy
+
+app = "smb-voice-agent"
+primary_region = "iad" # Washington, D.C. - change to your preferred region
+
+# Build configuration
+[build]
+  dockerfile = "Dockerfile"
+
+# Agent service (LiveKit worker)
+[[services]]
+  internal_port = 8080
+  protocol = "tcp"
+
+  [[services.ports]]
+    port = 80
+    handlers = ["http"]
+
+  [[services.ports]]
+    port = 443
+    handlers = ["tls", "http"]
+
+  [services.concurrency]
+    type = "connections"
+    hard_limit = 25
+    soft_limit = 20
+
+  [[services.tcp_checks]]
+    interval = "15s"
+    timeout = "5s"
+    grace_period = "10s"
+
+# Environment variables
+[env]
+  NODE_ENV = "production"
+  API_PORT = "8080"
+  LOG_LEVEL = "info"
+
+# Resource allocation for agent
+[vm]
+  memory = "2gb"
+  cpu_kind = "shared"
+  cpus = 2
+
+# Autoscaling
+[autoscaling]
+  min_count = 1
+  max_count = 10
+
+# Restart policy
+[restart]
+  policy = "on-failure"
+  max_retries = 3
