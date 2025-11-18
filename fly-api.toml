@@ -1,0 +1,58 @@
+# Fly.io deployment configuration for SMB Voice AI API Server
+# Deploy with: fly deploy --config fly-api.toml
+
+app = "smb-voice-api"
+primary_region = "iad" # Washington, D.C. - change to your preferred region
+
+# Build configuration - use API Dockerfile
+[build]
+  dockerfile = "Dockerfile.api"
+
+# API service (Express server for Twilio webhooks)
+[[services]]
+  internal_port = 3001
+  protocol = "tcp"
+
+  [[services.ports]]
+    port = 80
+    handlers = ["http"]
+    force_https = true
+
+  [[services.ports]]
+    port = 443
+    handlers = ["tls", "http"]
+
+  [services.concurrency]
+    type = "connections"
+    hard_limit = 1000
+    soft_limit = 800
+
+  [[services.http_checks]]
+    interval = "15s"
+    timeout = "5s"
+    grace_period = "10s"
+    method = "get"
+    path = "/health"
+
+# Environment variables
+[env]
+  NODE_ENV = "production"
+  API_PORT = "3001"
+  API_HOST = "0.0.0.0"
+  LOG_LEVEL = "info"
+
+# Resource allocation
+[vm]
+  memory = "1gb"
+  cpu_kind = "shared"
+  cpus = 1
+
+# Autoscaling
+[autoscaling]
+  min_count = 1
+  max_count = 5
+
+# Restart policy
+[restart]
+  policy = "on-failure"
+  max_retries = 3
